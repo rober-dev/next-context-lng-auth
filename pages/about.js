@@ -2,13 +2,13 @@
 import React from 'react';
 
 // Component definition
-const HomePage = () => {
+const AboutPage = () => {
   return (
     <>
-      <h1>Index page</h1>
+      <h1>About page</h1>
     </>
   );
 };
 
 // Exportation
-export default HomePage;
+export default AboutPage;

@@ -1,5 +1,7 @@
 // Vendor libs
 import React from 'react';
+import App from 'next/app';
+import { appWithTranslation } from '../lib/i18n';
 
 // Custom Libs
 import Header from '../components/header';
@@ -14,5 +16,9 @@ const BaseApp = ({ Component, pageProps }) => {
   );
 };
 
+BaseApp.getInitialProps = async (appContext) => ({
+  ...(await App.getInitialProps(appContext)),
+});
+
 // Exportation
-export default BaseApp;
+export default appWithTranslation(BaseApp);

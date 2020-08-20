@@ -5,6 +5,7 @@ import { appWithTranslation } from '../lib/i18n';
 
 // Contexts
 import { LngProvider } from '../context/lng';
+import { AuthProvider } from '../context/auth';
 
 // Custom Libs
 import Header from '../components/header';
@@ -14,8 +15,10 @@ const BaseApp = ({ Component, pageProps }) => {
   return (
     <>
       <LngProvider>
-        <Header />
-        <Component {...pageProps} />
+        <AuthProvider>
+          <Header />
+          <Component {...pageProps} />
+        </AuthProvider>
       </LngProvider>
     </>
   );

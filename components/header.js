@@ -1,16 +1,42 @@
 // Vendor libs
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 // Custom libs
 import { Link, withTranslation } from '../lib/i18n';
 
 // Contexts
 import { LngContext } from '../context/lng';
+import { AuthContext } from '../context/auth';
 
 // Component definition
 const Header = ({ t }) => {
   // Get context members
   const { lng, languages, changeLanguage } = useContext(LngContext);
+  const { currentUser, logIn, logOut } = useContext(AuthContext);
+
+  // Component state members
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [success, setSuccess] = useState();
+  const [message, setMessage] = useState('');
+
+  // Event handlers
+  const logOutHandler = (e) => {
+    e.preventDefault();
+    logOut();
+  };
+
+  const logInHandler = (e) => {
+    try {
+      e.preventDefault();
+      logIn(username, password);
+      setSuccess(true);
+      setMessage(t('auth:loginSuccess'));
+    } catch (err) {
+      setSuccess(false);
+      setMessage(t('auth:loginError'));
+    }
+  };
 
   return (
     <>
@@ -42,13 +68,47 @@ const Header = ({ t }) => {
             })}
         </li>
       </ul>
+      {currentUser && (
+        <div>
+          <span>
+            {t('auth:currentUser')}: {currentUser.username}
+          </span>
+          <button type='button' onClick={(e) => logOutHandler(e)}>
+            {t('auth:logOut')}
+          </button>
+        </div>
+      )}
+      {!currentUser && (
+        <div>
+          <span>{t('auth:logIn')}</span>
+
+          <form onSubmit={logInHandler}>
+            <span>{t('auth:username')}</span>
+            <input
+              type='text'
+              name='username'
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <span>{t('auth:password')}</span>
+            <input
+              type='password'
+              name='password'
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button type='submit'>{t('auth:logIn')}</button>
+          </form>
+        </div>
+      )}
+      {message && (
+        <div style={{ color: success ? 'green' : 'red' }}>{message}</div>
+      )}
     </>
   );
 };
 
 Header.getInitialProps = async () => ({
-  namespacesRequired: ['common', 'header'],
+  namespacesRequired: ['common', 'header', 'auth'],
 });
 
 // Exportation
-export default withTranslation('header')(Header);
+export default withTranslation('header', 'auth')(Header);

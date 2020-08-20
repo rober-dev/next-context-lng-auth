@@ -1,16 +1,16 @@
 // Vendor libs
-import React from 'react';
+import React, { useContext } from 'react';
 
 // Custom libs
-import { i18n, Link, withTranslation } from '../lib/i18n';
+import { Link, withTranslation } from '../lib/i18n';
+
+// Contexts
+import { LngContext } from '../context/lng';
 
 // Component definition
 const Header = ({ t }) => {
-  const changeLanguageHandler = (e) => {
-    e.preventDefault();
-    const lng = i18n.language;
-    i18n.changeLanguage(lng === 'es' ? 'en' : 'es');
-  };
+  // Get context members
+  const { lng, languages, changeLanguage } = useContext(LngContext);
 
   return (
     <>
@@ -26,9 +26,22 @@ const Header = ({ t }) => {
           </Link>
         </li>
       </ul>
-      <button type='button' onClick={changeLanguageHandler}>
-        Cambiar idioma
-      </button>
+      <ul>
+        <li>
+          <p>{`Current language: ${lng}`}</p>
+          {languages &&
+            languages.map((l) => {
+              return (
+                <div key={l.code}>
+                  <span onClick={() => changeLanguage(l.code)}>
+                    {l.code.toUpperCase()}
+                  </span>
+                  <span>&nbsp;</span>
+                </div>
+              );
+            })}
+        </li>
+      </ul>
     </>
   );
 };

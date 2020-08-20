@@ -3,6 +3,9 @@ import React from 'react';
 import App from 'next/app';
 import { appWithTranslation } from '../lib/i18n';
 
+// Contexts
+import { LngProvider } from '../context/lng';
+
 // Custom Libs
 import Header from '../components/header';
 
@@ -10,8 +13,10 @@ import Header from '../components/header';
 const BaseApp = ({ Component, pageProps }) => {
   return (
     <>
-      <Header />
-      <Component {...pageProps} />
+      <LngProvider>
+        <Header />
+        <Component {...pageProps} />
+      </LngProvider>
     </>
   );
 };
